@@ -6,13 +6,16 @@ from random import randint
 #######################################
 
 def arguments():
+    global opefn
+
     parser = argparse.ArgumentParser(description='Generate simple operations')
 
-    parser.add_argument('-n','--number',help='Number of operations [default: 5]',default='5',required=False)
-    parser.add_argument('-p','--operation',help='Operation to be done. [default: +; available: + -]',default='+',required=False)
-    parser.add_argument('-m','--min',help='Minimum value for the operations [default: 0]',default='0',required=False)
-    parser.add_argument('-M','--max',help='Maximum value for the operations [default: 10]',default='10',required=False)
+    parser.add_argument('-n','--number',help='Number of operations [default: 5]',type=int,default=5,required=False)
+    parser.add_argument('-p','--operation',help='Operation to be done. [default: add; available: add sub div times max]',default='add',required=False)
+    parser.add_argument('-m','--min',help='Minimum value for the operations [default: 0]',type=int, default=0,required=False)
+    parser.add_argument('-M','--max',help='Maximum value for the operations [default: 10]',type=int,default=10,required=False)
     parser.add_argument('-u','--unknown',help='Missing value for the operation a+b=c [default: 0; available: 0 (None missing), a, b, c]',default='0',required=False)
+    #parser.add_argument('--sub',dest='operation_fn',help='Set a subtraction instead of an addition',action='store_const',const=sub,default=add,required=False)
 
     try:
         options = parser.parse_args()
@@ -20,32 +23,29 @@ def arguments():
         sys.exit(0)
 
     # Number of operations
-    if options.number.isdigit():
-        nb_ope = int(options.number)
-    else:
-        print('Error: the given operation number format is not correct: '+options.number)
-        sys.exit(1)
+    nb_ope = int(options.number)
 
     # Type of operation
-    if '+' == options.operation or '-'==options.operation:
-        ope = options.operation
+    if 'add' == options.operation: 
+        ope = '+'
+    elif 'sub'==options.operation:
+        ope = '-'
+    elif 'div'==options.operation:
+        ope = '/'
+    elif 'times'==options.operation:
+        ope = '*'
+    elif 'max'==options.operation:
+        ope = '<?>' 
     else:
         print('Error: the given operation is unknown: '+options.operation)
         sys.exit(1)
+    opefn=options.operation
 
     # Minmum for the operand, and result
-    if options.min.isdigit():
-        vmin = int(options.min)
-    else:
-        print('Error: the given minimal value format is not correct: '+options.min)
-        sys.exit(1)
+    vmin = int(options.min)
 
     # Maximum for the operand and result
-    if options.max.isdigit():
-        vmax = int(options.max)
-    else:
-        print('Error: the given maximal value format is not correct: '+options.max)
-        sys.exit(1)
+    vmax = int(options.max)
 
     # Missing value
     if options.unknown in ['0','a','b','c']:
@@ -60,6 +60,20 @@ def arguments():
 
 #######################################
 
+def sub(a,b):
+    return a-b
+
+def add(a,b):
+    return a+b
+
+def div(a,b):
+    return a/b
+
+def times(a,b):
+    return a*b
+
+#######################################
+
 def getrand(vmin,vmax):
     return randint(vmin,vmax)
 
@@ -71,12 +85,15 @@ def inrange(v,vmin,vmax):
 #######################################
 
 def operation(a,b,operation):
-    if '+' == operation:
-        return a+b
-    elif '-' == operation:
-        return a-b
-    else:
-        return None
+    global opefn
+
+    return eval(opefn)(a,b)
+    #if '+' == operation:
+    #    return a+b
+    #elif '-' == operation:
+    #    return a-b
+    #else:
+    #    return None
 
 #######################################
 
