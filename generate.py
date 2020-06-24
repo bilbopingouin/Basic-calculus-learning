@@ -17,11 +17,17 @@ def div(a,b):
 def times(a,b):
     return a*b
 
-operations_functions = { 'add': add, 'sub': sub, 'div': div, 'times': times, 'max': max }
-
 #######################################
 
 def arguments():
+    # Known operations
+    operations_functions = { 'add': {'function' : add, 'sign' : '+'}, 
+                             'sub': {'function' : sub, 'sign' : '-'}, 
+                             'div': {'function' : div, 'sign' : '/'},
+                             'times': {'function' : times, 'sign' : '*'}, 
+                             'max': { 'function' : max, 'sign' : '<?>'}
+                            }
+
     # Initialise the parser
     parser = argparse.ArgumentParser(description='Generate simple operations')
 
@@ -42,20 +48,12 @@ def arguments():
     params['nb_ope'] = int(options.number)
 
     # Type of operation
-    if 'add' == options.operation: 
-        params['ope'] = '+'
-    elif 'sub'==options.operation:
-        params['ope'] = '-'
-    elif 'div'==options.operation:
-        params['ope'] = '/'
-    elif 'times'==options.operation:
-        params['ope'] = '*'
-    elif 'max'==options.operation:
-        params['ope'] = '<?>' 
-    else:
+    if options.operation not in operations_functions:
         print('Error: the given operation is unknown: '+options.operation)
         sys.exit(1)
-    params['opefn']=operations_functions[options.operation]
+
+    params['ope'] = operations_functions[options.operation]['sign']
+    params['opefn']=operations_functions[options.operation]['function']
 
     # Minmum for the operand, and result
     params['vmin'] = int(options.min)
