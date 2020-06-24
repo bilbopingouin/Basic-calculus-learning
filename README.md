@@ -2,6 +2,8 @@
 
 This helps to generate simple calculus exercises for a kid, learning to sum
 
+[![CodeFactor](https://www.codefactor.io/repository/github/bilbopingouin/basic-calculus-learning/badge)](https://www.codefactor.io/repository/github/bilbopingouin/basic-calculus-learning)
+
 ## Objective
 
 A kid learning to count and to calculate needs to do many operations or the type: "4+5=?". It requires some effort to write them oneself. And tends not to be very random. This program offers an alternative.
